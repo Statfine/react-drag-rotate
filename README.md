@@ -32,8 +32,6 @@ import TransRotateCom from '../../src'
 
 ### props
 
-### Pagination
-
 | Parameter        | Description                        | Type          | Default                         |
 |------------------|------------------------------------|---------------|---------------------------------|
 | position         | default position                   | Object        | { x, y, height, width, rotate}  |
