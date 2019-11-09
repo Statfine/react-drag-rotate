@@ -9,8 +9,6 @@
 npm install react-drag-rotate
 ```
 
-`npm init` 是生成初始的 **package.json** 的命令，在 `npm init` 的时候，你可以根据你自己的需要进行填写你的组件信息。或者直接使用 `npm init -y` 采用默认的，后面自己再去修改。
-
 首先安装 react 相关的包：
 
 ```bash
@@ -29,3 +27,17 @@ import TransRotateCom from '../../src'
 />
 
 ```
+
+## API
+
+### props
+
+### Pagination
+
+| Parameter        | Description                        | Type          | Default                         |
+|------------------|------------------------------------|---------------|---------------------------------|
+| position         | default position                   | Object        | { x, y, height, width, rotate}  |
+| children         | children                           | Node          | null                            |
+| isEqualRatio     | single line is  equal ratio        | Bool          | false                           |
+| cbActualChange   | actual change position callback    | Func          | position                        |
+| cbMouseUp        | mouse up callback                  | Func          | position                        |
