@@ -7,8 +7,8 @@
 ## example
 ```bash
 npm install
-npm statr
-http://localhost:30011
+npm start
+http://localhost:3011
 ```
 
 ## 安装组件
