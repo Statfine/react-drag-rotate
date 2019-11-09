@@ -9,7 +9,9 @@ module.exports = {
     entry: path.join(__dirname, "./example/src/app.js"),
     output: {
         path: path.join(__dirname, "example/dist"),
-        filename: "bundle.js"
+        filename: "bundle.js",
+        library: 'react-drag-rotate',
+        libraryTarget: 'umd',
     },
     module: {
         rules: [{
@@ -24,6 +26,6 @@ module.exports = {
     },
     devtool: 'source-map',
     devServer: {
-        port: 3001
+        port: 3011
     }
 };
