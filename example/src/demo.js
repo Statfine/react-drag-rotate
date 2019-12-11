@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import TransRotateCom from '../../src'
+import TransRotateCom from '../../src';
+import { transform, isPointInRect, getRectScalePoint } from '../../src/utils';
 
 const BaseInfo = styled.div`
   position: absolute;
@@ -20,12 +21,43 @@ const EachEvent = styled.div`
 `;
 
 export default class TransRotate extends React.PureComponent {
-  state = {};
+  state = {
+    position: {
+      x: 0,
+      y: 0,
+      height: 100,
+      width: 100,
+      rotate: 0,
+    },
+    isInRect: false,
+  };
+
+  componentDidMount() {
+    document.addEventListener('mouseup', this.handlePreviewDivMouseUp);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mouseup', this.handlePreviewDivMouseUp);
+  }
+
+  handlePreviewDivMouseUp = (ev) => {
+    this.setState({ isInRect: false });
+    const point = [ev.clientX, ev.clientY];
+    const { position } = this.state;
+    // const rectTransform = transform(position, position.rotate);
+    // console.log('rectTransform', rectTransform);
+    // console.log('getRectScalePoint', getRectScalePoint(position.width, position.height, position.x, position.y, position.rotate))
+    if (isPointInRect(point, position)
+    ) {
+      this.setState({ isInRect: true });
+    }
+  }
 
   render() {
     return (
       <div>
         <BaseInfo>
+          {this.state.isInRect && <p>点击位置再拖拽组件内</p>}
           <EachEvent>
             <h3>拖动(handleBindMoveEvents)</h3>
             <p>监听xy轴偏移量 直接设置</p>
@@ -46,8 +78,8 @@ export default class TransRotate extends React.PureComponent {
         </BaseInfo>
         <TransRotateCom
           position={{ x: 0, y: 0, height: 100, width: 100, rotate: 0 }}
-          cbActualChange={(info) => console.log('cbActualChange', info)}
-          cbMouseUp={(info) => console.log('cbMouseUp', info)}
+          cbActualChange={(info) => this.setState({ position: info }, () => console.log('cbActualChange', info))}
+          cbMouseUp={(info) => this.setState({ position: info }, () => console.log('cbMouseUp', info))}
         />
       </div>
     );

@@ -114,3 +114,79 @@ export function getScaledRect(isEqualRatio, params, baseIndex) {
     height: newHeight,
   };
 }
+
+export const getStartPoint = (x1, y1, currentDeg, cx, cy) => {
+  const degToRad = currentDeg * Math.PI / 180;
+  const sx = x1 * Math.cos(degToRad) - y1 * Math.sin(degToRad) + cx;
+  const sy = x1 * Math.sin(degToRad) + y1 * Math.cos(degToRad) + cy;
+  // return { sx, sy };
+  return [sx, sy];
+};
+
+// 计算拖动点的坐标
+export const getRectScalePoint = (startW, startH, dragStartL, dragStartT, deg) => {
+  const startX = dragStartL; // 左上角 x 坐标 转动角度为 0
+  const startY = dragStartT;// 左上角 y 坐标 转动角度为 0
+  const cx = startX + startW / 2; // 中心点 x 坐标
+  const cy = startY + startH / 2; // 中心点 y 坐标
+  const tr = {// rect四边形右上角 坐标 转动角度为 0
+    sx: startX + startW,
+    sy: startY,
+  };
+  const br = {// rect四变形 右下角 坐标 转动角度为 0
+    sx: startX + startW,
+    sy: startY + startH,
+  };
+  const bl = {// rect四变形  坐标 转动角度为 0
+    sx: startX,
+    sy: startY + startH,
+  };
+  // 计算初始角度 的八个拖动点 坐标
+  const topLeft = getStartPoint(startX - cx, startY - cy, deg, cx, cy);
+
+  const topRight = getStartPoint(tr.sx - cx, tr.sy - cy, deg, cx, cy);
+
+  const bottomRight = getStartPoint(br.sx - cx, br.sy - cy, deg, cx, cy);
+
+  const bottomLeft = getStartPoint(bl.sx - cx, bl.sy - cy, deg, cx, cy);
+  return [
+    topLeft,
+    topRight,
+    bottomLeft,
+    bottomRight,
+  ];
+};
+/**
+ * 判断落点是否在区域内
+ * 
+ * @param {Array} point 落点坐标。 数组：[x, y]
+ * @param {Array} rect 长方形坐标, 按顺序分别是：左上、右上、左下、右下。 
+ *                     数组：[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]
+ * 
+ * @return {boolean} 
+ */
+
+export function isPointInRect(point, rect) {
+  const [touchX, touchY] = point;
+  // 长方形四个点的坐标
+  const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = getRectScalePoint(rect.width, rect.height, rect.x, rect.y, rect.rotate);
+  // 四个向量
+  const v1 = [x1 - touchX, y1 - touchY];
+  const v2 = [x2 - touchX, y2 - touchY];
+  const v3 = [x3 - touchX, y3 - touchY];
+  const v4 = [x4 - touchX, y4 - touchY];
+  const flag1 =  (v1[0] * v2[1] - v2[0] * v1[1]) > 0 ;
+  const flag2 = (v2[0] * v4[1] -  v4[0] * v2[1]) > 0;
+  const flag3 = (v4[0] * v3[1] - v3[0] * v4[1]) > 0;
+  const flag4 = (v3[0] * v1[1] -  v1[0] * v3[1]) > 0;
+  console.log('isPointInRect', flag1, flag2, flag3, flag4);
+  if(
+      (v1[0] * v2[1] - v2[0] * v1[1]) > 0 
+      && (v2[0] * v4[1] -  v4[0] * v2[1]) > 0
+      && (v4[0] * v3[1] - v3[0] * v4[1]) > 0
+      && (v3[0] * v1[1] -  v1[0] * v3[1]) > 0
+  ){
+      return true;
+  }
+  return false;
+}
